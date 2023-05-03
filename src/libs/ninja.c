@@ -40,7 +40,7 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
     
     //highscore.txt
     // Read high score from file
-    FILE *highscore_file = fopen("highscore.txt", "r");
+    FILE *highscore_file = fopen("thirdparty/highscore.txt", "r");
     int high_score = 0;
     if (highscore_file != NULL) {
         fscanf(highscore_file, "%d", &high_score);
@@ -49,7 +49,7 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
     // Update high score if necessary
     if (f_score > high_score) {
         high_score = f_score;
-        highscore_file = fopen("highscore.txt", "w");
+        highscore_file = fopen("thirdparty/highscore.txt", "w");
         if (highscore_file != NULL) {
             fprintf(highscore_file, "%d", high_score);
             fclose(highscore_file);
@@ -57,49 +57,4 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
     }
     // Display high score
     printf("High score: %d\n", high_score);
-}
-
-int main(void) {
-    char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], difficulty;
-    int num_words = 0;
-    
-    // Load words from a file
-    FILE *fp = fopen("words.txt", "r");
-    if (fp == NULL) {
-        printf("Error: Unable to open file\n");
-        exit(1);
-    }
-    while (fgets(words[num_words], MAX_WORD_LENGTH, fp) != NULL) {
-        int len = strlen(words[num_words]);
-        if (words[num_words][len - 1] == '\n') {
-            words[num_words][len - 1] = '\0';
-        }
-        num_words++;
-    }
-    fclose(fp);
-
-    // Seed the random number generator
-    srand(time(NULL));
-
-    // Ask the user for the difficulty
-    printf("Choose difficulty: easy, medium or hard\n");
-    scanf("%s", &difficulty);
-    switch (difficulty) {
-        case 'e':
-        case 'E':
-            play_game(words, 4, 7, 10);
-            break;
-        case 'm':
-        case 'M':
-            play_game(words, 7, 12, 10);
-            break;
-        case 'h':
-        case 'H':
-            play_game(words, 12, 20, 10);
-            break;
-        default:
-            printf("Error: no such difficulty\n");
-            return 1;
-    }
-    return 0;
 }

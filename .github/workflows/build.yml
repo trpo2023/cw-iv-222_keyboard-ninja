@@ -13,4 +13,4 @@ jobs:
         run: git ls-files *.{c,h} | xargs clang-format -i --verbose && git diff --exit-code
 
       - name: Build application
-        run: cd "/home/artyom/cw-iv-222_keyboard-ninja/" && gcc main.c -o main && "/home/artyom/cw-iv-222_keyboard-ninja/"main
+        run: make
