@@ -7,55 +7,23 @@
 #define MAX_WORD_LENGTH 50
 #define MAX_NUM_WORDS 10000
 
-int main(void) {
-    char words[MAX_NUM_WORDS][MAX_WORD_LENGTH];
-    int num_words = 0;
+void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_len, int num_rounds) {
     char input[MAX_WORD_LENGTH];
-    int i, j, k, len;
-    int score = 0;
-    int max_num_words;
+    int i, len, score = 0;
     time_t start_time, end_time;
+    int used[MAX_NUM_WORDS] = {0};
+    int word_index;
 
-    // Load words from a file
-    FILE *fp = fopen("words.txt", "r");
-    if (fp == NULL) {
-        printf("Error: Unable to open file\n");
-        exit(1);
-    }
-    while (fgets(words[num_words], MAX_WORD_LENGTH, fp) != NULL) {
-        len = strlen(words[num_words]);
-        if (words[num_words][len - 1] == '\n') {
-            words[num_words][len - 1] = '\0';
-        }
-        num_words++;
-    }
-    fclose(fp);
-
-    // Ask the user for the number of words to play with
-    printf("Enter the number of words to play with: ");
-    scanf("%d", &max_num_words);
-
-    // Validate user input
-    if (max_num_words > num_words) {
-        printf("Error: The number of words to play with cannot be greater than the total number of words.\n");
-        exit(1);
-    }
-
-    // Shuffle the words
-    srand(time(NULL));
-    for (i = 0; i < num_words - 1; i++) {
-        j = i + rand() / (RAND_MAX / (num_words - i) + 1);
-        strcpy(input, words[j]);
-        strcpy(words[j], words[i]);
-        strcpy(words[i], input);
-    }
-
-    // Game loop
     start_time = time(NULL);
-    for (i = 0; i < max_num_words; i++) {
-        printf("%s\n", words[i]);
+    for (i = 0; i < num_rounds; i++) {
+        do {
+            word_index = rand() % MAX_NUM_WORDS;
+            len = strlen(words[word_index]);
+        } while (used[word_index] || len < min_len || len > max_len);
+        used[word_index] = 1;
+        printf("%s\n", words[word_index]);
         scanf("%s", input);
-        if (strcmp(input, words[i]) == 0) {
+        if (strcasecmp(input, words[word_index]) == 0) {
             score++;
         } else {
             printf("Incorrect!\n");
@@ -64,12 +32,58 @@ int main(void) {
     end_time = time(NULL);
 
     // Calculate accuracy
-    float accuracy = ((float) score / max_num_words) * 100;
+    float accuracy = ((float) score / num_rounds) * 100;
+    float f_score = (float) score / (end_time - start_time) * 60;
 
     // Display results
-    printf("Score: %d/%d\n", score, max_num_words);
+    printf("Correct words: %d/%d\n", score, num_rounds);
     printf("Accuracy: %.2f%%\n", accuracy);
     printf("Time taken: %d seconds\n", (int) (end_time - start_time));
+    printf("%.2f words per minute\n", f_score);
+}
 
+int main(void) {
+    char words[MAX_NUM_WORDS][MAX_WORD_LENGTH];
+    int num_words = 0;
+    char difficulty;
+    
+    // Load words from a file
+    FILE *fp = fopen("words.txt", "r");
+    if (fp == NULL) {
+        printf("Error: Unable to open file\n");
+        exit(1);
+    }
+    while (fgets(words[num_words], MAX_WORD_LENGTH, fp) != NULL) {
+        int len = strlen(words[num_words]);
+        if (words[num_words][len - 1] == '\n') {
+            words[num_words][len - 1] = '\0';
+        }
+        num_words++;
+    }
+    fclose(fp);
+
+    // Seed the random number generator
+    srand(time(NULL));
+
+    // Ask the user for the difficulty
+    printf("Choose difficulty: easy, medium or hard\n");
+    scanf("%s", &difficulty);
+    switch (difficulty) {
+        case 'e':
+        case 'E':
+            play_game(words, 4, 7, 10);
+            break;
+        case 'm':
+        case 'M':
+            play_game(words, 7, 12, 10);
+            break;
+        case 'h':
+        case 'H':
+            play_game(words, 12, 20, 10);
+            break;
+        default:
+            printf("Error: no such difficulty\n");
+            return 1;
+    }
     return 0;
 }
