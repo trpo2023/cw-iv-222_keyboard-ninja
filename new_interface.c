@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <ncurses.h>
+
 #include <math.h>
 
 #define MAX_WORD_LENGTH 50
@@ -79,21 +80,21 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
     }
     // Check if current score is higher than high score
     if (score > high_score) {
-    // Update high score
-    high_score = score;
+        // Update high score
+        high_score = score;
 
-    // Write new high score to file
-    fp = fopen("highscore.txt", "w");
-    if (fp != NULL) {
-        fprintf(fp, "%d", high_score);
-        fclose(fp);
-    }
+        // Write new high score to file
+        fp = fopen("highscore.txt", "w");
+        if (fp != NULL) {
+            fprintf(fp, "%d", high_score);
+            fclose(fp);
+        }
 
-    // Display message about new high score
-    printw("New high score: %d!\n", high_score);
+        // Display message about new high score
+        printw("New high score: %d!\n", high_score);
     } else {
-    // Display message about current high score
-    printw("Current high score: %d\n", high_score);
+        // Display message about current high score
+        printw("Current high score: %d\n", high_score);
     }
 
     // Wait for user input before exiting
@@ -101,42 +102,80 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
     getch();
 }
 
-int main() {
-    srand(time(NULL));
-    char words[MAX_NUM_WORDS][MAX_WORD_LENGTH];
+int main(void) {
+
+    initscr();
+    start_color();
+    init_pair(1, COLOR_RED, COLOR_BLACK);
+    wbkgd(stdscr, COLOR_PAIR(1));
+    
+    char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], difficulty;
     int num_words = 0;
-    int min_len = 4, max_len = 8, num_rounds = 10;
-    // Open file containing words
-    FILE *fp = fopen("words.txt", "r");
-    if (fp == NULL) {
-        printf("Error opening file.\n");
-        return 1;
-    }
-
-    // Read words from file
-    char word[MAX_WORD_LENGTH];
-    while (fgets(word, MAX_WORD_LENGTH, fp)) {
-        // Remove trailing newline character
-        word[strcspn(word, "\n")] = '\0';
-
-        // Add word to array if it is the right length
-        int len = strlen(word);
-        if (len >= min_len && len <= max_len && num_words < MAX_NUM_WORDS) {
-            strcpy(words[num_words], word);
-            num_words++;
-        }
-    }
-
-    // Close file
-    fclose(fp);
 
     // Initialize ncurses
     initscr();
     cbreak();
     noecho();
 
-    // Play game
-    play_game(words, min_len, max_len, num_rounds);
+    // Load words from a file
+    FILE *fp = fopen("words.txt", "r");
+    if (fp == NULL) {
+        printw("Error: Unable to open file\n");
+        refresh();
+        endwin();
+        exit(1);
+    }
+    while (fgets(words[num_words], MAX_WORD_LENGTH, fp) != NULL) {
+        int len = strlen(words[num_words]);
+        if (words[num_words][len - 1] == '\n') {
+            words[num_words][len - 1] = '\0';
+        }
+        num_words++;
+    }
+    fclose(fp);
+
+    // Seed the random number generator
+    srand(time(NULL));
+
+    // Main menu
+    do {
+        clear();
+        printw("Typing Speed Test\n");
+        printw("------------------\n\n");
+        printw("Choose difficulty level:\n");
+        printw("1) Easy (words of length 3-5)\n");
+        printw("2) Medium (words of length 6-8)\n");
+        printw("3) Hard (words of length 9-12)\n");
+        printw("4) Expert (words of length 13+)\n");
+        printw("5) Quit\n");
+        refresh();
+        difficulty = getch();
+        clear();
+        switch (difficulty) {
+            case '1':
+                play_game(words, 3, 5, 10);
+                break;
+            case '2':
+                play_game(words, 6, 8, 10);
+                break;
+            case '3':
+                play_game(words, 9, 12, 10);
+                break;
+            case '4':
+                play_game(words, 13, MAX_WORD_LENGTH, 10);
+                break;
+            case '5':
+                break;
+            default:
+                printw("Invalid choice\n");
+                break;
+        }
+        if (difficulty >= '1' && difficulty <= '4') {
+            printw("\nPress any key to continue\n");
+            refresh();
+            getch();
+        }
+    } while (difficulty != '5');
 
     // Clean up ncurses
     endwin();
