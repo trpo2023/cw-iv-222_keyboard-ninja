@@ -1,3 +1,4 @@
 *test
 *interface
-*new_interface.o
+*.[o]
+.vscode/
