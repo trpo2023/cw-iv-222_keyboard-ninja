@@ -9,10 +9,8 @@
 
 void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_len, int num_rounds) {
     char input[MAX_WORD_LENGTH];
-    int i, len, score = 0;
+    int i, len, score = 0, used[MAX_NUM_WORDS] = {0}, word_index;
     time_t start_time, end_time;
-    int used[MAX_NUM_WORDS] = {0};
-    int word_index;
 
     start_time = time(NULL);
     for (i = 0; i < num_rounds; i++) {
@@ -36,16 +34,34 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
     float f_score = (float) score / (end_time - start_time) * 60;
 
     // Display results
-    printf("Correct words: %d/%d\n", score, num_rounds);
     printf("Accuracy: %.2f%%\n", accuracy);
     printf("Time taken: %d seconds\n", (int) (end_time - start_time));
     printf("%.2f words per minute\n", f_score);
+    
+    //highscore.txt
+    // Read high score from file
+    FILE *highscore_file = fopen("highscore.txt", "r");
+    int high_score = 0;
+    if (highscore_file != NULL) {
+        fscanf(highscore_file, "%d", &high_score);
+        fclose(highscore_file);
+    }
+    // Update high score if necessary
+    if (f_score > high_score) {
+        high_score = f_score;
+        highscore_file = fopen("highscore.txt", "w");
+        if (highscore_file != NULL) {
+            fprintf(highscore_file, "%d", high_score);
+            fclose(highscore_file);
+        }
+    }
+    // Display high score
+    printf("High score: %d\n", high_score);
 }
 
 int main(void) {
-    char words[MAX_NUM_WORDS][MAX_WORD_LENGTH];
+    char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], difficulty;
     int num_words = 0;
-    char difficulty;
     
     // Load words from a file
     FILE *fp = fopen("words.txt", "r");
