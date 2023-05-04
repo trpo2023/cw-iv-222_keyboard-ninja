@@ -1,91 +1,65 @@
+#include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
 #include <ctype.h>
-#include <ncurses.h>
 
 #define MAX_WORD_LENGTH 50
 #define MAX_NUM_WORDS 10000
 
-int main(void) {
-    char words[MAX_NUM_WORDS][MAX_WORD_LENGTH];
-    int num_words = 0;
+void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_len, int num_rounds) {
     char input[MAX_WORD_LENGTH];
-    int i, j, k, len;
-    int score = 0;
-    int max_num_words;
+    int i, len, score = 0;
     time_t start_time, end_time;
+    int used[MAX_NUM_WORDS] = {0};
+    int word_index;
 
-    // Load words from a file
-    FILE *fp = fopen("words.txt", "r");
-    if (fp == NULL) {
-        printf("Error: Unable to open file\n");
-        exit(1);
-    }
-    while (fgets(words[num_words], MAX_WORD_LENGTH, fp) != NULL) {
-        len = strlen(words[num_words]);
-        if (words[num_words][len - 1] == '\n') {
-            words[num_words][len - 1] = '\0';
-        }
-        num_words++;
-    }
-    fclose(fp);
-
-    // Initialize ncurses
-    initscr();
-    cbreak();
-    noecho();
-
-    // Ask the user for the number of words to play with
-    mvprintw(0, 0, "Enter the number of words to play with: ");
-    scanw("%d", &max_num_words);
-
-    // Validate user input
-    if (max_num_words > num_words) {
-        mvprintw(1, 0, "Error: The number of words to play with cannot be greater than the total number of words.");
-        getch();
-        endwin();
-        exit(1);
-    }
-
-    // Shuffle the words
-    srand(time(NULL));
-    for (i = 0; i < num_words - 1; i++) {
-        j = i + rand() / (RAND_MAX / (num_words - i) + 1);
-        strcpy(input, words[j]);
-        strcpy(words[j], words[i]);
-        strcpy(words[i], input);
-    }
-
-    // Game loop
     start_time = time(NULL);
-    for (i = 0; i < max_num_words; i++) {
-        mvprintw(3 + i, 0, "%s\n", words[i]);
-        refresh();
-        scanw("%s", input);
-        if (strcmp(input, words[i]) == 0) {
+    for (i = 0; i < num_rounds; i++) {
+        do {
+            word_index = rand() % MAX_NUM_WORDS;
+            len = strlen(words[word_index]);
+        } while (used[word_index] || len < min_len || len > max_len);
+        used[word_index] = 1;
+        printf("%s\n", words[word_index]);
+        scanf("%s", input);
+        if (strcasecmp(input, words[word_index]) == 0) {
             score++;
         } else {
-            mvprintw(3 + i, strlen(words[i]) + 1, "Incorrect!");
-            refresh();
-            getch();
+            printf("Incorrect!\n");
         }
     }
     end_time = time(NULL);
 
     // Calculate accuracy
-    float accuracy = ((float) score / max_num_words) * 100;
+    float accuracy = ((float) score / num_rounds) * 100;
+    float f_score = (float) score / (end_time - start_time) * 60;
 
     // Display results
-    mvprintw(3 + max_num_words, 0, "Score: %d/%d", score, max_num_words);
-    mvprintw(4 + max_num_words, 0, "Accuracy: %.2f%%", accuracy);
-    mvprintw(5 + max_num_words, 0, "Time taken: %d seconds", (int) (end_time - start_time));
-    refresh();
-    getch();
+    printf("Correct words: %d/%d\n", score, num_rounds);
+    printf("Accuracy: %.2f%%\n", accuracy);
+    printf("Time taken: %d seconds\n", (int) (end_time - start_time));
+    printf("%.2f words per minute\n", f_score);
+}
 
-    // Clean up ncurses
-    endwin();
+int main(int argc, char *argv[]) {
+    GtkBuilder      *builder; 
+    GtkWidget       *window;
+
+    gtk_init(&argc, &argv);
+
+    builder = gtk_builder_new();
+    gtk_builder_add_from_file (builder, "interface.glade", NULL);
+
+    window = GTK_WIDGET(gtk_builder_get_object(builder, "window_main"));
+
+    gtk_builder_connect_signals(builder, NULL);
+
+    g_object_unref(builder);
+
+    gtk_widget_show(window);                
+    gtk_main();
 
     return 0;
 }
