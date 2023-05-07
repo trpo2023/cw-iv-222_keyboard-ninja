@@ -5,7 +5,7 @@ TEST_NAME = ninja_test
 CFLAGS = -Wall -Wextra -Werror
 CPPFLAGS = -I src -I thirdparty -MP -MMD
 LDFLAGS =
-LDLIBS = -lm
+LDLIBS = -lm -lncurses
 
 BIN_DIR = bin
 OBJ_DIR = obj
