@@ -58,7 +58,6 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
     printw("Time taken: %.0f:%02.0f\n", total_time / 60, fmod(total_time, 60));
     printw("%.2f words per minute\n", f_score);
     printw("Correctly entered words: %d out of %d\n", correct_words, num_rounds);
-    printw("End time: %s", ctime(&end_time)); // вывод времени окончания игры
 
     //highscore.txt
     // Read high score from file
@@ -69,9 +68,9 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
     fclose(fp);
     }
     // Check if current score is higher than high score
-    if (score > high_score) {
+    if (f_score > high_score) {
         // Update high score
-        high_score = score;
+        high_score = f_score;
 
         // Write new high score to file
         fp = fopen("highscore.txt", "w");
@@ -81,10 +80,10 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
         }
 
         // Display message about new high score
-        printw("New high score: %d!\n", high_score);
+        printw("New highscore: %d words per minute!\n", high_score);
     } else {
         // Display message about current high score
-        printw("Current high score: %d\n", high_score);
+        printw("Current highscore: %d\n words per minute", high_score);
     }
 
     // Wait for user input before exiting

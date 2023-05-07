@@ -38,7 +38,7 @@ int main(void) {
     // Main menu
     do {
         clear();
-        printw("Typing Speed Test\n");
+        printw("Welcome to keyboard ninja!\n");
         printw("------------------\n\n");
         printw("Choose difficulty level:\n");
         printw("1) Easy (words of length 3-5)\n");
