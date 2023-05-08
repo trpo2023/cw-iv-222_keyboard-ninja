@@ -38,7 +38,7 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
                 break;
             } else if (isalpha(ch)) {
                 if (pos < MAX_WORD_LENGTH - 1) {
-                    input[pos] = toupper(ch);
+                    input[pos] = ch;
                     pos++;
                     input[pos] = '\0';
                 }
