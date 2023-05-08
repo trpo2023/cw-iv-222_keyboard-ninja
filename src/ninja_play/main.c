@@ -4,7 +4,7 @@ int main(void) {
 
     initscr();
     start_color();
-    init_pair(1, COLOR_RED, COLOR_BLACK);
+    init_pair(1, COLOR_WHITE, COLOR_BLACK);
     wbkgd(stdscr, COLOR_PAIR(1));
     
     char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], difficulty;
