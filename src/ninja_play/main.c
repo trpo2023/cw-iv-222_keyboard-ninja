@@ -16,7 +16,7 @@ int main(void) {
     noecho();
 
     // Load words from a file
-    FILE *fp = fopen("words.txt", "r");
+    FILE *fp = fopen("ninja_txt/words.txt", "r");
     if (fp == NULL) {
         printw("Error: Unable to open file\n");
         refresh();
