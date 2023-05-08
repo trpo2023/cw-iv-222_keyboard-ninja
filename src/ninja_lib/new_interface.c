@@ -1,3 +1,6 @@
+#include <ctype.h>
+#include <math.h>
+
 #include <ninja_lib/new_interface.h>
 
 void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_len, int num_rounds) {
@@ -35,7 +38,7 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
                 break;
             } else if (isalpha(ch)) {
                 if (pos < MAX_WORD_LENGTH - 1) {
-                    input[pos] = toupper(ch);
+                    input[pos] = ch;
                     pos++;
                     input[pos] = '\0';
                 }
@@ -62,7 +65,7 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
     //highscore.txt
     // Read high score from file
     int high_score = 0;
-    FILE *fp = fopen("highscore.txt", "r");
+    FILE *fp = fopen("ninja_txt/highscore.txt", "r");
     if (fp != NULL) {
     fscanf(fp, "%d", &high_score);
     fclose(fp);
@@ -73,7 +76,7 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
         high_score = f_score;
 
         // Write new high score to file
-        fp = fopen("highscore.txt", "w");
+        fp = fopen("ninja_txt/highscore.txt", "w");
         if (fp != NULL) {
             fprintf(fp, "%d", high_score);
             fclose(fp);
