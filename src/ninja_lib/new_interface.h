@@ -1,11 +1,7 @@
-#include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include <string.h>
-#include <ctype.h>
 #include <ncurses.h>
-
-#include <math.h>
 
 #define MAX_WORD_LENGTH 50
 #define MAX_NUM_WORDS 10000
