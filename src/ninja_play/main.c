@@ -51,16 +51,16 @@ int main(void) {
         clear();
         switch (difficulty) {
             case '1':
-                play_game(words, 3, 5, 10);
+                play_game(words, 3, 5, 25);
                 break;
             case '2':
-                play_game(words, 6, 8, 10);
+                play_game(words, 6, 8, 25);
                 break;
             case '3':
-                play_game(words, 9, 12, 10);
+                play_game(words, 9, 12, 25);
                 break;
             case '4':
-                play_game(words, 13, MAX_WORD_LENGTH, 10);
+                play_game(words, 13, MAX_WORD_LENGTH, 25);
                 break;
             case '5':
                 break;
