@@ -4,6 +4,14 @@
 
 #include <ctest.h>
 
+// Функция для имитации пользовательского ввода
+void mock_user_input(const char* input)
+{
+    FILE* input_stream = freopen("input.txt", "w", stdin);
+    fputs(input, input_stream);
+    fclose(input_stream);
+}
+
 // Функция для проверки, что два слова равны
 CTEST(compare_words, test_equal_words)
 {
@@ -34,15 +42,14 @@ CTEST(play_game, test_negative_rounds)
     int max_len = 6;
     int num_rounds = -1;
 
+    // Имитируем ввод пользователя
+    mock_user_input("1\n"); // Вводим число раундов
+
     // Перенаправляем вывод в буфер, чтобы проверить результаты
     FILE* stream = freopen("output.txt", "w", stdout);
 
-    // Вызываем функцию play_game только если num_rounds > 0
-    if (num_rounds > 0) {
-        play_game(words, min_len, max_len, num_rounds);
-    } else {
-        printf("Invalid number of rounds.\n");
-    }
+    // Вызываем функцию play_game
+    play_game(words, min_len, max_len);
 
     // Закрываем поток вывода
     fclose(stream);
