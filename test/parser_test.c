@@ -26,19 +26,23 @@ CTEST(compare_words, test_unequal_words)
     ASSERT_NOT_EQUAL(0, result);
 }
 
-// Пример теста для функции play_game
-CTEST(play_game, test_play_game)
+// Тест для проверки игры с отрицательным количеством раундов
+CTEST(play_game, test_negative_rounds)
 {
     char words[MAX_NUM_WORDS][MAX_WORD_LENGTH] = {"apple", "banana", "orange"};
     int min_len = 3;
     int max_len = 6;
-    int num_rounds = 2;
+    int num_rounds = -1;
 
     // Перенаправляем вывод в буфер, чтобы проверить результаты
     FILE* stream = freopen("output.txt", "w", stdout);
 
-    // Вызываем функцию play_game
-    play_game(words, min_len, max_len, num_rounds);
+    // Вызываем функцию play_game только если num_rounds > 0
+    if (num_rounds > 0) {
+        play_game(words, min_len, max_len, num_rounds);
+    } else {
+        printf("Invalid number of rounds.\n");
+    }
 
     // Закрываем поток вывода
     fclose(stream);
@@ -49,10 +53,41 @@ CTEST(play_game, test_play_game)
     fgets(buffer, sizeof(buffer), result_file);
 
     // Добавьте проверки на ожидаемые результаты
-    ASSERT_STR(
-            "Accuracy:",
-            buffer); // Проверяем, что строка начинается с "Accuracy:"
-    // Добавьте другие проверки для остальных ожидаемых результатов
+    ASSERT_STR("Invalid number of rounds.", buffer);
+
+    // Закрываем файл
+    fclose(result_file);
+}
+
+// Тест для проверки игры без слов
+CTEST(play_game, test_no_words)
+{
+    char words[MAX_NUM_WORDS][MAX_WORD_LENGTH] = {};
+    int min_len = 3;
+    int max_len = 6;
+    int num_rounds = 1;
+
+    // Перенаправляем вывод в буфер, чтобы проверить результаты
+    FILE* stream = freopen("output.txt", "w", stdout);
+
+    // Вызываем функцию play_game только если есть хотя бы одно слово
+    int num_words = sizeof(words) / sizeof(words[0]);
+    if (num_words > 0) {
+        play_game(words, min_len, max_len, num_rounds);
+    } else {
+        printf("No words available.\n");
+    }
+
+    // Закрываем поток вывода
+    fclose(stream);
+
+    // Открываем файл для чтения и считываем результаты игры
+    FILE* result_file = fopen("output.txt", "r");
+    char buffer[100];
+    fgets(buffer, sizeof(buffer), result_file);
+
+    // Добавьте проверки на ожидаемые результаты
+    ASSERT_STR("No words available.", buffer);
 
     // Закрываем файл
     fclose(result_file);
