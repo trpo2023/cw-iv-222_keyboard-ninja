@@ -3,7 +3,8 @@
 
 #include <ninja_lib/ninja.h>
 
-void print_word(const char* word, const char* input) {
+void print_word(const char* word, const char* input)
+{
     clear();
     printw("%s\n%s", word, input);
     refresh();
@@ -77,7 +78,8 @@ void play_game(
     update_high_score(score);
 }
 
-void update_high_score(int score) {
+void update_high_score(int score)
+{
     // Read high score from file
     int high_score = 0;
     FILE* fp = fopen("ninja_txt/highscore.txt", "r");
@@ -100,10 +102,10 @@ void update_high_score(int score) {
 
         // Display message about new high score
         printw("New high score: %d!\n", high_score);
-        } else {
+    } else {
         // Display message about current high score
         printw("Current high score: %d\n", high_score);
-        }
+    }
     // Wait for user input before exiting
     printw("\nPress any key to exit...");
     getch();
