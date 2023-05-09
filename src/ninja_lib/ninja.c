@@ -78,7 +78,7 @@ void play_game(
     update_high_score(score);
 }
 
-void update_high_score(int score)
+void update_high_score(int f_score)
 {
     // Read high score from file
     int high_score = 0;
