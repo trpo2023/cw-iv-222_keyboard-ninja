@@ -3,6 +3,12 @@
 
 #include <ninja_lib/ninja.h>
 
+void print_word(const char* word, const char* input) {
+    clear();
+    printw("%s\n%s", word, input);
+    refresh();
+}
+
 void play_game(
         char words[MAX_NUM_WORDS][MAX_WORD_LENGTH],
         int min_len,
@@ -22,9 +28,8 @@ void play_game(
             len = strlen(words[word_index]);
         } while (used[word_index] || len < min_len || len > max_len);
         used[word_index] = 1;
-        clear();
-        printw("%s\n", words[word_index]);
-        refresh();
+        print_word(words[word_index], "");
+
         int ch, pos = 0;
         while (1) {
             ch = getch();
@@ -33,7 +38,7 @@ void play_game(
                     pos--;
                     input[pos] = '\0';
                 }
-            } else if (ch == KEY_ENTER || ch == '\n') { // If user pressed Enter
+            } else if (ch == KEY_ENTER || ch == '\n') {
                 if (strcasecmp(input, words[word_index]) == 0) {
                     score++;
                     correct_words++;
@@ -48,9 +53,7 @@ void play_game(
                     input[pos] = '\0';
                 }
             }
-            clear();
-            printw("%s\n%s", words[word_index], input);
-            refresh();
+            print_word(words[word_index], input);
         }
         end_time = time(NULL);
         total_time += difftime(end_time, start_time);
@@ -68,16 +71,21 @@ void play_game(
     printw("Correctly entered words: %d out of %d\n",
            correct_words,
            num_rounds);
-    printw("End time: %s", ctime(&end_time)); // вывод времени окончания игры
+    printw("End time: %s", ctime(&end_time));
 
-    // highscore.txt
-    //  Read high score from file
+    // Update high score if necessary
+    update_high_score(score);
+}
+
+void update_high_score(int score) {
+    // Read high score from file
     int high_score = 0;
     FILE* fp = fopen("ninja_txt/highscore.txt", "r");
     if (fp != NULL) {
         fscanf(fp, "%d", &high_score);
         fclose(fp);
     }
+
     // Check if current score is higher than high score
     if (f_score > high_score) {
         // Update high score
@@ -91,12 +99,11 @@ void play_game(
         }
 
         // Display message about new high score
-        printw("New highscore: %d words per minute!\n", high_score);
-    } else {
+        printw("New high score: %d!\n", high_score);
+        } else {
         // Display message about current high score
-        printw("Current highscore: %d\n words per minute", high_score);
-    }
-
+        printw("Current high score: %d\n", high_score);
+        }
     // Wait for user input before exiting
     printw("\nPress any key to exit...");
     getch();

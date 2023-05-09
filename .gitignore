@@ -3,3 +3,5 @@
 .vscode/
 *a.out
 *ninja_play
+*ninja_test
+*output.txt
