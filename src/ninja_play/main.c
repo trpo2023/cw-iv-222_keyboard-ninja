@@ -1,4 +1,4 @@
-#include <ninja_lib/new_interface.h>
+#include <ninja_lib/ninja.h>
 
 int main(void) {
     initscr();

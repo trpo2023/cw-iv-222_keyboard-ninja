@@ -1,7 +1,7 @@
 #include <ctype.h>
 #include <math.h>
 
-#include <ninja_lib/new_interface.h>
+#include <ninja_lib/ninja.h>
 
 void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_len, int num_rounds) {
     char input[MAX_WORD_LENGTH];
