@@ -3,7 +3,12 @@
 
 #include <ninja_lib/ninja.h>
 
-void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_len, int num_rounds) {
+void play_game(
+        char words[MAX_NUM_WORDS][MAX_WORD_LENGTH],
+        int min_len,
+        int max_len,
+        int num_rounds)
+{
     char input[MAX_WORD_LENGTH];
     int i, len, score = 0, used[MAX_NUM_WORDS] = {0}, word_index;
     time_t start_time, end_time;
@@ -28,7 +33,7 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
                     pos--;
                     input[pos] = '\0';
                 }
-            } else if (ch == KEY_ENTER || ch == '\n') {  // If user pressed Enter
+            } else if (ch == KEY_ENTER || ch == '\n') { // If user pressed Enter
                 if (strcasecmp(input, words[word_index]) == 0) {
                     score++;
                     correct_words++;
@@ -52,23 +57,26 @@ void play_game(char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], int min_len, int max_
     }
 
     // Calculate accuracy
-    float accuracy = ((float) score / num_rounds) * 100;
-    float f_score = (float) score / (total_time / 60);
+    float accuracy = ((float)score / num_rounds) * 100;
+    float f_score = (float)score / (total_time / 60);
 
     // Display results
     clear();
     printw("Accuracy: %.2f%%\n", accuracy);
     printw("Time taken: %.0f:%02.0f\n", total_time / 60, fmod(total_time, 60));
     printw("%.2f words per minute\n", f_score);
-    printw("Correctly entered words: %d out of %d\n", correct_words, num_rounds);
+    printw("Correctly entered words: %d out of %d\n",
+           correct_words,
+           num_rounds);
+    printw("End time: %s", ctime(&end_time)); // вывод времени окончания игры
 
-    //highscore.txt
-    // Read high score from file
+    // highscore.txt
+    //  Read high score from file
     int high_score = 0;
-    FILE *fp = fopen("ninja_txt/highscore.txt", "r");
+    FILE* fp = fopen("ninja_txt/highscore.txt", "r");
     if (fp != NULL) {
-    fscanf(fp, "%d", &high_score);
-    fclose(fp);
+        fscanf(fp, "%d", &high_score);
+        fclose(fp);
     }
     // Check if current score is higher than high score
     if (f_score > high_score) {
