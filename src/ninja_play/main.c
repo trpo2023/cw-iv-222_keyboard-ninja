@@ -1,6 +1,7 @@
 #include <ninja_lib/ninja.h>
 
-int main(void) {
+int main(void)
+{
     initscr();
     start_color();
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
@@ -12,7 +13,7 @@ int main(void) {
     cbreak();
     noecho();
     // Load words from a file
-    FILE *fp = fopen("ninja_txt/words.txt", "r");
+    FILE* fp = fopen("ninja_txt/words.txt", "r");
     if (fp == NULL) {
         printw("Error: Unable to open file\n");
         refresh();
@@ -44,23 +45,23 @@ int main(void) {
         difficulty = getch();
         clear();
         switch (difficulty) {
-            case '1':
-                play_game(words, 3, 5, 25);
-                break;
-            case '2':
-                play_game(words, 6, 8, 25);
-                break;
-            case '3':
-                play_game(words, 9, 12, 25);
-                break;
-            case '4':
-                play_game(words, 13, MAX_WORD_LENGTH, 25);
-                break;
-            case '5':
-                break;
-            default:
-                printw("Invalid choice\n");
-                break;
+        case '1':
+            play_game(words, 3, 5, 25);
+            break;
+        case '2':
+            play_game(words, 6, 8, 25);
+            break;
+        case '3':
+            play_game(words, 9, 12, 25);
+            break;
+        case '4':
+            play_game(words, 13, MAX_WORD_LENGTH, 25);
+            break;
+        case '5':
+            break;
+        default:
+            printw("Invalid choice\n");
+            break;
         }
         if (difficulty >= '1' && difficulty <= '4') {
             printw("\nPress any key to continue\n");
