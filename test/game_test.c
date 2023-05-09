@@ -53,10 +53,10 @@ CTEST(update_high_score, valid_input)
 {
     int high_score = 0;
     FILE* fp = fopen("ninja_txt/highscore.txt", "w");
-        if (fp != NULL) {
-            fprintf(fp, "%d", high_score);
-            fclose(fp);
-        }
+    if (fp != NULL) {
+        fprintf(fp, "%d", high_score);
+        fclose(fp);
+    }
     // Assert
     ASSERT_TRUE(1);
 }
