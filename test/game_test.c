@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#include <ninja_lib/ninja.h>
-#include <ctest.h>
+#include <../src/ninja_lib/ninja.h>
+#include <../thirdparty/ctest.h>
 
 CTEST(update_high_score, invalid_input)
 {
