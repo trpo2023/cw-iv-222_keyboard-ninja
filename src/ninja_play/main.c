@@ -1,20 +1,16 @@
-#include <ninja_lib/new_interface.h>
+#include <ninja_lib/ninja.h>
 
 int main(void) {
-
     initscr();
     start_color();
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
     wbkgd(stdscr, COLOR_PAIR(1));
-    
     char words[MAX_NUM_WORDS][MAX_WORD_LENGTH], difficulty;
     int num_words = 0;
-
     // Initialize ncurses
     initscr();
     cbreak();
     noecho();
-
     // Load words from a file
     FILE *fp = fopen("ninja_txt/words.txt", "r");
     if (fp == NULL) {
@@ -31,10 +27,8 @@ int main(void) {
         num_words++;
     }
     fclose(fp);
-
     // Seed the random number generator
     srand(time(NULL));
-
     // Main menu
     do {
         clear();
@@ -74,9 +68,7 @@ int main(void) {
             getch();
         }
     } while (difficulty != '5');
-
     // Clean up ncurses
     endwin();
-
     return 0;
 }
